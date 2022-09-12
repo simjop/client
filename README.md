@@ -26,5 +26,6 @@ If you want to be in touch with the community, please connect to [discord](https
 
 ## Resources
 - [Conventional Commits](https://www.conventionalcommits.org)
+- [SVG Colors](https://www.december.com/html/spec/colorsvg.html)
 - [wxPython Reference](https://docs.wxpython.org/)
 - [wxPython ZetCode](https://zetcode.com/wxpython/)
