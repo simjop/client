@@ -14,7 +14,7 @@ class AreaEditor(wx.Frame):
 
     def InitUI(self):
 
-        self.SetSize((300, 200))
+        self.SetSize((800, 600))
         self.SetTitle("simJOP")
 
         self._depth = 32
