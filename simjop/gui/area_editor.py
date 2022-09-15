@@ -1,6 +1,7 @@
 import wx
 
 from core.painter import Painter
+from gui.toolbar import ToolBarLogic
 
 
 class AreaEditor(wx.Frame):
@@ -8,6 +9,7 @@ class AreaEditor(wx.Frame):
         super().__init__(*args, **kwargs)
 
         self.buffer = None
+        self.toolbar = None
 
         self.InitUI()
         self.Centre()
@@ -28,7 +30,17 @@ class AreaEditor(wx.Frame):
         menubar.Append(file_menu, "&File")
         self.SetMenuBar(menubar)
 
+        toolbar = self.CreateToolBar()
+        bitmap_track = wx.Bitmap("simjop/icons/btn_24_track.svg", wx.BITMAP_TYPE_ANY)
+        bitmap_signal = wx.Bitmap("simjop/icons/btn_24_signal.svg", wx.BITMAP_TYPE_ANY)
+        line_tool = toolbar.AddCheckTool(wx.ID_ANY, "Line", bitmap_track)
+        signal_tool = toolbar.AddCheckTool(wx.ID_ANY, "Signal", bitmap_signal)
+        toolbar.Realize()
+        self.toolbar = ToolBarLogic(toolbar, ["Line", "Signal"])
+
         self.Bind(wx.EVT_MENU, self.OnQuit, file_item)
+        self.Bind(wx.EVT_TOOL, self.OnLineButton, line_tool)
+        self.Bind(wx.EVT_TOOL, self.OnSignalButton, signal_tool)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnCursorEnterWindow)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnCursorLeaveWindow)
@@ -82,3 +94,9 @@ class AreaEditor(wx.Frame):
 
     def OnQuit(self, e):
         self.Close()
+
+    def OnLineButton(self, e):
+        self.toolbar.on_button("Line")
+
+    def OnSignalButton(self, e):
+        self.toolbar.on_button("Signal")
