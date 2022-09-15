@@ -74,10 +74,11 @@ class AreaEditor(wx.Frame):
         painter = Painter(dc, zoom=3)
         painter.draw(cursor_position)
         tile = painter.tile
+        statusbar = self.GetStatusBar()
         if tile is None:
-            self.StatusBar.SetStatusText("[-:-]")
+            statusbar.SetStatusText("[-:-]")
         else:
-            self.StatusBar.SetStatusText(f"[{tile[0]}:{tile[1]}]")
+            statusbar.SetStatusText(f"[{tile[0]}:{tile[1]}]")
 
     def OnQuit(self, e):
         self.Close()
