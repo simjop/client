@@ -56,15 +56,15 @@ class AreaEditor(wx.Frame):
         )
         self.SetIcon(icon)
 
-    def OnCursorEnterWindow(self, e):
+    def OnCursorEnterWindow(self, event):
         blank_cursor = wx.Cursor(wx.CURSOR_BLANK)
         self.SetCursor(blank_cursor)
 
-    def OnCursorLeaveWindow(self, e):
+    def OnCursorLeaveWindow(self, event):
         default_cursor = wx.Cursor(wx.CURSOR_DEFAULT)
         self.SetCursor(default_cursor)
 
-    def OnMouseMotion(self, e):
+    def OnMouseMotion(self, event):
 
         dc = wx.ClientDC(self)
         dc_w, dc_h = dc.GetSize()
@@ -77,9 +77,9 @@ class AreaEditor(wx.Frame):
             self.buffer = wx.Bitmap(dc_w, dc_h, depth=self._depth)
 
         buffered_dc = wx.BufferedDC(dc, buffer=self.buffer, style=wx.BUFFER_CLIENT_AREA)
-        self.draw(buffered_dc, e.GetPosition())
+        self.draw(buffered_dc, event.GetPosition())
 
-    def OnPaint(self, e):
+    def OnPaint(self, event):
         dc = wx.AutoBufferedPaintDC(self)
         self.draw(dc)
 
@@ -93,11 +93,11 @@ class AreaEditor(wx.Frame):
         else:
             statusbar.SetStatusText(f"[{tile[0]}:{tile[1]}]")
 
-    def OnQuit(self, e):
+    def OnQuit(self, event):
         self.Close()
 
-    def OnLineButton(self, e):
+    def OnLineButton(self, event):
         self.toolbar.on_button("Line")
 
-    def OnSignalButton(self, e):
+    def OnSignalButton(self, event):
         self.toolbar.on_button("Signal")
