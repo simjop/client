@@ -11,6 +11,8 @@ class AreaEditor(wx.Frame):
         self.buffer = None
         self.toolbar = None
 
+        self._zoom = 3
+
         self.InitUI()
         self.Centre()
 
@@ -83,7 +85,7 @@ class AreaEditor(wx.Frame):
         self.draw(dc)
 
     def draw(self, dc, cursor_position=None):
-        painter = Painter(dc, zoom=3)
+        painter = Painter(dc, self._zoom)
         painter.draw(cursor_position)
         tile = painter.tile
         statusbar = self.GetStatusBar()
