@@ -12,6 +12,7 @@ class AreaEditor(wx.Frame):
         self.toolbar = None
 
         self._zoom = 3
+        self._depth = 32
 
         self.InitUI()
         self.Centre()
@@ -20,8 +21,6 @@ class AreaEditor(wx.Frame):
 
         self.SetSize((800, 600))
         self.SetTitle("simJOP")
-
-        self._depth = 32
 
         self.SetBackgroundStyle(wx.BG_STYLE_PAINT)
         self.buffer = wx.Bitmap(300, 200, depth=self._depth)
