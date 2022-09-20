@@ -1,7 +1,15 @@
+from enum import Enum, auto
+
 import wx
 
-from core.painter import Painter
+from core.painter import Dimension, Painter
 from gui.toolbar import ToolBarLogic
+
+
+class ActionMode(Enum):
+    DEFAULT = auto()
+    LINE_ENABLED = auto()
+    LINE_STARTED = auto()
 
 
 class AreaEditor(wx.Frame):
@@ -10,6 +18,7 @@ class AreaEditor(wx.Frame):
 
         self.buffer = None
         self.toolbar = None
+        self.click_mode = ActionMode.DEFAULT
 
         self._zoom = 3
         self._depth = 32
@@ -42,10 +51,11 @@ class AreaEditor(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnQuit, file_item)
         self.Bind(wx.EVT_TOOL, self.OnLineButton, line_tool)
         self.Bind(wx.EVT_TOOL, self.OnSignalButton, signal_tool)
-        self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_ENTER_WINDOW, self.OnCursorEnterWindow)
         self.Bind(wx.EVT_LEAVE_WINDOW, self.OnCursorLeaveWindow)
+        self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
+        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftClick)
 
         statusbar = wx.StatusBar(self)
         statusbar.SetStatusText("Připraveno")
@@ -97,7 +107,24 @@ class AreaEditor(wx.Frame):
         self.Close()
 
     def OnLineButton(self, event):
-        self.toolbar.on_button("Line")
+        if self.toolbar.on_button("Line"):
+            self.click_mode = ActionMode.LINE_ENABLED
+        else:
+            self.click_mode = ActionMode.DEFAULT
 
     def OnSignalButton(self, event):
-        self.toolbar.on_button("Signal")
+        self.click_mode = ActionMode.DEFAULT
+
+    def OnLeftClick(self, event):
+        dc = wx.ClientDC(self)
+        dim = Dimension(dc, self._zoom)
+        position = event.GetLogicalPosition(dc)
+        tile = dim.xy_to_tile(position)
+
+        match self.click_mode:
+            case ActionMode.LINE_ENABLED:
+                self.click_mode = ActionMode.LINE_STARTED
+            case ActionMode.LINE_STARTED:
+                self.click_mode = ActionMode.LINE_ENABLED
+            case _:
+                pass

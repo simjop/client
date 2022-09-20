@@ -24,3 +24,4 @@ class ToolBarLogic:
             for tool in self._toggle_group:
                 if tool != button and tools[tool]["enabled"] and tools[tool]["state"]:
                     self._toolbar.ToggleTool(tools[tool]["id"], False)
+        return tools[button]["enabled"] and tools[button]["state"]
