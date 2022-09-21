@@ -67,16 +67,7 @@ class AreaEditor(wx.Frame):
         )
         self.SetIcon(icon)
 
-    def OnCursorEnterWindow(self, event):
-        blank_cursor = wx.Cursor(wx.CURSOR_BLANK)
-        self.SetCursor(blank_cursor)
-
-    def OnCursorLeaveWindow(self, event):
-        default_cursor = wx.Cursor(wx.CURSOR_DEFAULT)
-        self.SetCursor(default_cursor)
-
-    def OnMouseMotion(self, event):
-
+    def _ManuallyBufferedPaintDC(self):
         dc = wx.ClientDC(self)
         dc_w, dc_h = dc.GetSize()
 
@@ -87,7 +78,18 @@ class AreaEditor(wx.Frame):
         if dc_w != bw or dc_h != bh:
             self.buffer = wx.Bitmap(dc_w, dc_h, depth=self._depth)
 
-        buffered_dc = wx.BufferedDC(dc, buffer=self.buffer, style=wx.BUFFER_CLIENT_AREA)
+        return wx.BufferedDC(dc, buffer=self.buffer, style=wx.BUFFER_CLIENT_AREA)
+
+    def OnCursorEnterWindow(self, event):
+        blank_cursor = wx.Cursor(wx.CURSOR_BLANK)
+        self.SetCursor(blank_cursor)
+
+    def OnCursorLeaveWindow(self, event):
+        default_cursor = wx.Cursor(wx.CURSOR_DEFAULT)
+        self.SetCursor(default_cursor)
+
+    def OnMouseMotion(self, event):
+        buffered_dc = self._ManuallyBufferedPaintDC()
         self.draw(buffered_dc, event.GetPosition())
 
     def OnPaint(self, event):
@@ -118,10 +120,10 @@ class AreaEditor(wx.Frame):
         self.click_mode = ActionMode.DEFAULT
 
     def OnLeftClick(self, event):
-        dc = wx.ClientDC(self)
-        dimension = Dimension(dc, self._zoom)
-        position = event.GetLogicalPosition(dc)
-        clicked_tile = dimension.xy_to_tile(position)
+        buffered_dc = self._ManuallyBufferedPaintDC()
+        dimension = Dimension(buffered_dc, self._zoom)
+        cursor_position = event.GetLogicalPosition(buffered_dc)
+        clicked_tile = dimension.xy_to_tile(cursor_position)
 
         match self.click_mode:
             case ActionMode.LINE_ENABLED:
