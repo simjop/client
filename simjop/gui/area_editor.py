@@ -2,7 +2,8 @@ from enum import Enum, auto
 
 import wx
 
-from core.painter import Dimension, Painter
+from core.dimension import Dimension
+from core.painter import Painter
 from gui.toolbar import ToolBarLogic
 
 
@@ -94,14 +95,15 @@ class AreaEditor(wx.Frame):
         self.draw(dc)
 
     def draw(self, dc, cursor_position=None):
-        painter = Painter(dc, self._zoom)
+        dimension = Dimension(dc, self._zoom)
+        painter = Painter(dc, dimension)
         painter.draw(cursor_position)
-        tile = painter.tile
+        cursor_tile = dimension.xy_to_tile(cursor_position)
         statusbar = self.GetStatusBar()
-        if tile is None:
+        if cursor_tile is None:
             statusbar.SetStatusText("[-:-]")
         else:
-            statusbar.SetStatusText(f"[{tile[0]}:{tile[1]}]")
+            statusbar.SetStatusText(f"[{cursor_tile[0]}:{cursor_tile[1]}]")
 
     def OnQuit(self, event):
         self.Close()
@@ -117,9 +119,9 @@ class AreaEditor(wx.Frame):
 
     def OnLeftClick(self, event):
         dc = wx.ClientDC(self)
-        dim = Dimension(dc, self._zoom)
+        dimension = Dimension(dc, self._zoom)
         position = event.GetLogicalPosition(dc)
-        tile = dim.xy_to_tile(position)
+        clicked_tile = dimension.xy_to_tile(position)
 
         match self.click_mode:
             case ActionMode.LINE_ENABLED:
