@@ -2,10 +2,10 @@ import wx
 
 
 class Painter:
-    def __init__(self, canvas, dimension):
+    def __init__(self, canvas, dimension, cursor_tile=None):
         self._canvas = canvas
         self._dim = dimension
-        self._cursor = None
+        self._cursor = cursor_tile
 
     def _draw_black_background(self):
         self._canvas.SetBrush(wx.Brush("BLACK"))
@@ -72,10 +72,7 @@ class Painter:
         self._canvas.DrawLine(x, offset[1], x, tile_size[1])
         self._canvas.DrawLine(offset[0], y, tile_size[0], y)
 
-    def draw(self, cursor_position=None):
-
-        self._cursor = self._dim.xy_to_tile(cursor_position)
-
+    def draw(self):
         self._draw_black_background()
         self._draw_grid()
         self._draw_cursor()

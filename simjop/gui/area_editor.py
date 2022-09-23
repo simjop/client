@@ -98,9 +98,9 @@ class AreaEditor(wx.Frame):
 
     def draw(self, dc, cursor_position=None):
         dimension = Dimension(dc, self._zoom)
-        painter = Painter(dc, dimension)
-        painter.draw(cursor_position)
         cursor_tile = dimension.xy_to_tile(cursor_position)
+        painter = Painter(dc, dimension, cursor_tile)
+        painter.draw()
         statusbar = self.GetStatusBar()
         if cursor_tile is None:
             statusbar.SetStatusText("[-:-]")
