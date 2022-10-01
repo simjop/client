@@ -90,13 +90,13 @@ class AreaEditor(wx.Frame):
 
     def OnMouseMotion(self, event):
         buffered_dc = self._ManuallyBufferedPaintDC()
-        self.draw(buffered_dc, event.GetPosition())
+        self._draw(buffered_dc, event.GetPosition())
 
     def OnPaint(self, event):
         dc = wx.AutoBufferedPaintDC(self)
-        self.draw(dc)
+        self._draw(dc)
 
-    def draw(self, dc, cursor_position=None):
+    def _draw(self, dc, cursor_position=None):
         dimension = Dimension(dc, self._zoom)
         cursor_tile = dimension.xy_to_tile(cursor_position)
         painter = Painter(dc, dimension, cursor_tile)
@@ -132,3 +132,5 @@ class AreaEditor(wx.Frame):
                 self.click_mode = ActionMode.LINE_ENABLED
             case _:
                 pass
+
+        self._draw(buffered_dc, cursor_position)
