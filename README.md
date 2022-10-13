@@ -13,6 +13,9 @@ If you want to be in touch with the community, please connect to [discord](https
     pip install black
     sudo dnf install \
         python3-pylint \
+        wxBase3 \
+        wxGTK3 \
+        wxGTK3-webview \
         python3-wxpython4 \
         python-wxpython4-doc \
         python3-wxpython4-media \
