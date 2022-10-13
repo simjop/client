@@ -13,6 +13,7 @@ If you want to be in touch with the community, please connect to [discord](https
     pip install black
     sudo dnf install \
         python3-pylint \
+        python3-jinja2 \
         wxBase3 \
         wxGTK3 \
         wxGTK3-webview \
@@ -30,5 +31,6 @@ If you want to be in touch with the community, please connect to [discord](https
 ## Resources
 - [Conventional Commits](https://www.conventionalcommits.org)
 - [SVG Colors](https://www.december.com/html/spec/colorsvg.html)
+- [Jinja](https://jinja.palletsprojects.com)
 - [wxPython Reference](https://docs.wxpython.org/)
 - [wxPython ZetCode](https://zetcode.com/wxpython/)
