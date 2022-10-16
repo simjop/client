@@ -67,6 +67,7 @@ class Painter:
 
         x, y = self._dim.tile_to_xy(self._cursor)
         self._canvas.SetPen(wx.Pen("RED"))
+        self._canvas.SetBrush(wx.Brush("white", wx.BRUSHSTYLE_TRANSPARENT))
         self._canvas.DrawRectangle(x, y, tile_size[0], tile_size[1])
 
         self._canvas.DrawLine(x, offset[1], x, tile_size[1])
