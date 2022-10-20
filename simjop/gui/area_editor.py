@@ -2,8 +2,11 @@ from enum import Enum, auto
 
 import wx
 
+from core.area import Area
+from core.line_helper import LineHelper
 from core.dimension import Dimension
 from core.painter import Painter
+from core.symbols import Symbols
 from gui.toolbar import ToolBarLogic
 
 
@@ -17,8 +20,11 @@ class AreaEditor(wx.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.area = Area()
+        self.line_helper = None
         self.buffer = None
         self.toolbar = None
+        self.symbols = Symbols()
         self.click_mode = ActionMode.DEFAULT
 
         self._zoom = 3
@@ -99,7 +105,9 @@ class AreaEditor(wx.Frame):
     def _draw(self, dc, cursor_position=None):
         dimension = Dimension(dc, self._zoom)
         cursor_tile = dimension.xy_to_tile(cursor_position)
-        painter = Painter(dc, dimension, cursor_tile)
+        painter = Painter(
+            dc, dimension, self.symbols, self.area, self.line_helper, cursor_tile
+        )
         painter.draw()
         statusbar = self.GetStatusBar()
         if cursor_tile is None:
@@ -128,8 +136,11 @@ class AreaEditor(wx.Frame):
         match self.click_mode:
             case ActionMode.LINE_ENABLED:
                 self.click_mode = ActionMode.LINE_STARTED
+                self.line_helper = LineHelper(self.area, clicked_tile)
             case ActionMode.LINE_STARTED:
                 self.click_mode = ActionMode.LINE_ENABLED
+                self.line_helper.finish(clicked_tile)
+                self.line_helper = None
             case _:
                 pass
 
